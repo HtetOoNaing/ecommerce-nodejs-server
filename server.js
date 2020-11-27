@@ -9,9 +9,13 @@ dotenv.config({
     path: './config/index.env'
 });
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(cors());
+
+// routes
+app.use('/api/user/', require('./routes/auth.route'));
 
 app.get('/', (req,res) => {
     res.send('test route => home page');
