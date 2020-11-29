@@ -73,4 +73,52 @@ router.post('/register', [
     }
 });
 
+router.post('/login', [
+    check('email', 'please include a valid email').isEmail(),
+    check('password', 'password is required').exists()
+], async(req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        })
+    }
+    // if everything is good, get email and password from request body
+    const {email, password} = req.body;
+    try {
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                errors: [{
+                    msg: 'Invalid credentials'
+                }]
+            });
+        }
+        // found user by email then compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) {
+            return res.status(400).json({
+                errors: [{
+                    msg: 'Invalid credentials'
+                }]
+            });
+        }
+        const payload = {
+            user: {
+                id: user.id
+            }
+        }
+        jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: 360000
+        }, (err, token) => {
+            if(err) throw err;
+            res.json({ token })
+        })
+
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).send('Server Error');
+    }
+})
+
 module.exports = router
