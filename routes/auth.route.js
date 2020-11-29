@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');     // encrypt password
 // check validation for requests
 const { check, validationResult } = require('express-validator');
 const gravatar = require('gravatar');   // get user image by email
+const auth = require('../middleware/auth');
 
 //  Models
 const User = require('../models/User');
