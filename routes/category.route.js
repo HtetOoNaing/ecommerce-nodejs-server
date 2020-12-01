@@ -4,6 +4,7 @@ const Category = require('../models/Category');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const { check, validationResult } = require('express-validator');
+const { route } = require('./auth.route');
 
 
 router.post('/', [
@@ -32,6 +33,9 @@ router.post('/', [
     }
 })
 
+// @route Get api/category/all
+// @desc  Get all categories
+// @access Public
 router.get('/all', async(req, res) => {
     try {
         let data = await Category.find({});
@@ -41,5 +45,6 @@ router.get('/all', async(req, res) => {
         res.status(500).send('Server Error');
     }
 })
+
 
 module.exports = router
