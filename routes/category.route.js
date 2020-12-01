@@ -3,10 +3,12 @@ const router = express.Router();
 const Category = require('../models/Category');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
+const categoryById = require('../middleware/categoryById');
 const { check, validationResult } = require('express-validator');
-const { route } = require('./auth.route');
 
-
+// @route Post api/category
+// @desc  Create new category
+// @access Private Admin
 router.post('/', [
     check('name', 'Name is required').trim().not().isEmpty()
 ], auth, adminAuth, async(req, res) => {
@@ -46,5 +48,11 @@ router.get('/all', async(req, res) => {
     }
 })
 
+// @route Get api/category/:categoryId
+// @desc  Get single category
+// @access Public
+router.get('/:categoryId', categoryById, async(req, res) => {
+    res.json(req.category);
+})
 
 module.exports = router
