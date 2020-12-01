@@ -71,4 +71,20 @@ router.put('/:categoryId', auth, adminAuth, categoryById, async(req, res) => {
     }
 })
 
+// @route Delete api/category/:categoryId
+// @desc  Delete category
+// @access Private Admin
+router.delete('/:categoryId', auth, adminAuth, categoryById, async(req, res) => {
+    let category = req.category;
+    try {
+        let deletedCategory = await category.remove();
+        res.json({
+            message: `${deletedCategory.name} deleted successfully.`
+        });
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).send('server Error');
+    }
+})
+
 module.exports = router
