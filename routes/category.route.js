@@ -32,6 +32,14 @@ router.post('/', [
     }
 })
 
-
+router.get('/all', async(req, res) => {
+    try {
+        let data = await Category.find({});
+        res.json(data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Server Error');
+    }
+})
 
 module.exports = router
