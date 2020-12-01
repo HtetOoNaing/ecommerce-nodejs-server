@@ -21,6 +21,7 @@ app.use(cors());
 // routes
 app.use('/api/user', require('./routes/auth.route'));
 app.use('/api/category', require('./routes/category.route'));
+app.use('/api/product', require('./routes/product.route'));
 
 app.get('/', (req, res) => {
     res.send('test route => home page');

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Category = require('./Category');
+let ObjectId = require('mongodb').ObjectID;
 
 const productSchema = new mongoose.Schema({
     name: {
