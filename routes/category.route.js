@@ -55,4 +55,20 @@ router.get('/:categoryId', categoryById, async(req, res) => {
     res.json(req.category);
 })
 
+// @route Put api/category/:categoryId
+// @desc  Update category
+// @access Private Admin
+router.put('/:categoryId', auth, adminAuth, categoryById, async(req, res) => {
+    let category = req.category;
+    const { name } = req.body;
+    if(name) category.name = name.trim();
+    try {
+        category = await category.save();
+        res.json(category);
+    } catch(error) {
+        console.log(error.message);
+        res.status(500).send('server Error');
+    }
+})
+
 module.exports = router
