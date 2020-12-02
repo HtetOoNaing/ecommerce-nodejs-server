@@ -119,5 +119,28 @@ router.get('/categories', async(req, res) => {
     }
 })
 
+// @route Get api/product/search
+// @desc  Get a list of products by search query
+// @access Public
+router.get('/search', async(req, res) => {
+    const query = {};
+    if(req.query.search) {
+        query.name = {
+            $regex = req.query.search,
+            $options = 'i'
+        }
+        if (req.query.category && req.query.category != 'All') {
+            query.category = req.query.category;
+        }
+    }
+    try {
+        let products = await Product.find(query).select('-photo');
+        res.json(products);
+    } catch(error) {
+        console.log(error);
+        res.status(500).send('Error to get products');
+    }
+})
+
 
 module.exports = router;
