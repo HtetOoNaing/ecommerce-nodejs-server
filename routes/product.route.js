@@ -101,5 +101,23 @@ router.get('/list', async(req, res) => {
     }
 })
 
+// @route Get api/product/categories
+// @desc  Get a list of categories of products
+// @access Public
+router.get('/categories', async(req, res) => {
+    try {
+        let categories = await Product.distinct('category');
+        if(!categories) {
+            return res.status(400).json({
+                error: "Categories not found"
+            })
+        }
+        res.json(categories);
+    } catch(error) {
+        console.log(error);
+        res.status(500).send('Server Error');
+    }
+})
+
 
 module.exports = router;
