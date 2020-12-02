@@ -7,6 +7,7 @@ const adminAuth = require('../middleware/adminAuth');
 const { check, validationResult } = require('express-validator');
 const formidable = require('formidable');
 const fs = require('fs');
+const productById = require('../middleware/productById');
 
 // @route Post api/product
 // @desc  Create new product
@@ -58,6 +59,37 @@ router.post('/', auth, adminAuth, async (req, res) => {
         }
 
     })
+})
+
+// @route Get api/product/productId
+// @desc  Get a product information
+// @access Public
+router.get('/:productId', productById, async (req, res) => {
+    req.product.photo = undefined;
+    return res.json(req.product);
+})
+
+// @route Get api/product/photo/productId
+// @desc  Get a product image
+// @access Public
+router.get('/photo/:productId', productById, async(req, res) => {
+    if(req.product.photo.data) {
+        res.set('Content-Type', req.product.photo.contentType);
+        return res.send(req.product.photo.data);
+    }
+    res.status(500).json({
+        error: 'Failed to load image'
+    });
+})
+
+// @route Get api/product/productId
+// @desc  Get a list of products with filter
+// @options ( order => asc or desc, sortBy => any product property like name, limit, number of return product )
+// @access Public
+router.get('/list', async(req, res) => {
+    let order = req.query.order ? req.query.order : 'asc';
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6;
 })
 
 
