@@ -82,7 +82,7 @@ router.get('/photo/:productId', productById, async(req, res) => {
     });
 })
 
-// @route Get api/product/productId
+// @route Get api/product/list
 // @desc  Get a list of products with filter
 // @options ( order => asc or desc, sortBy => any product property like name, limit, number of return product )
 // @access Public
@@ -90,6 +90,15 @@ router.get('/list', async(req, res) => {
     let order = req.query.order ? req.query.order : 'asc';
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
     let limit = req.query.limit ? parseInt(req.query.limit) : 6;
+    try {
+        let products = await Product.find({}).select('-photo').populate('category').sort([
+            [sortBy, order]
+        ]).limit(limit).exec();
+        res.json(products);
+    } catch(error) {
+        console.log(error);
+        res.status(500).send('Invalid querys');
+    }
 })
 
 
